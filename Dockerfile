@@ -1,16 +1,7 @@
-FROM node:current-alpine
+FROM node:16
 WORKDIR /app
 COPY package.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 CMD ["npm", "start"]
 
-# FROM node
-
-#  WORKDIR /jenkins github
-#  COPY package.json /jenkins github/
-#  RUN npm cache clean --force
-# RUN npm install
-#  COPY . /jenkins github/
-#  EXPOSE 8081
-#  CMD ["npm","start"]
