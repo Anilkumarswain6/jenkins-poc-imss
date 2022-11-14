@@ -6,6 +6,7 @@ COPY . .
 CMD ["npm", "start"]
 
 # FROM node
+
 #  WORKDIR /jenkins github
 #  COPY package.json /jenkins github/
 #  RUN npm cache clean --force
