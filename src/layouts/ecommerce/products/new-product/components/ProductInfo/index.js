@@ -82,9 +82,6 @@ function ProductInfo() {
 
   
   const formDatapost = async () => {
-    // const token = JSON.parse(localStorage.getItem('dataKey'))
-    // const responce = await httpInstance.post('/projects/add-project', projectDetails,
-    //   { headers: { "Authorization": `Bearer ${token}` } })
     dispatch({ type: sagaActions.CREATE_PROJECT_START, projectDetails,header })
   }
 

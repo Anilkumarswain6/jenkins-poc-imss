@@ -56,16 +56,16 @@ import httpInstance from "redux/config/axiosConfig";
 import { Typography } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import { logout } from "redux/usersSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as sagaActions from '../../../redux/sagaActions'
 
 function DashboardNavbar({ absolute, light, isMini }) {
-  const [notificationData, setNotificationData] = useState({})
+  const dispatchitem = useDispatch()
+  const token = useSelector(state => state.userData.token)
+  const notificationData = useSelector(state => state.userData.notificationData)
+  const header = { headers: { "Authorization": `Bearer ${token}` } }
   const loadNotificationApi = async () => {
-    const api = `/users/getNotification?pageno=1&pagesize=200`;
-    const token = JSON.parse(localStorage.getItem('dataKey'))
-    httpInstance.get(api, { headers: { "Authorization": `Bearer ${token}` } })
-      .then(res => { setNotificationData(res.data.data) })
-      .catch(err => { console.log('error', err); })
+    dispatchitem({ type: sagaActions.GET_NOTIFICATION_START, header })
   }
   useEffect(() => {
     loadNotificationApi()
@@ -79,7 +79,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   }
 
 
-  const dispatchitem = useDispatch()
+
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
@@ -166,10 +166,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-  // const navigate=useNavigate()
-  //   const accountBtnClick = () => {
-  //     navigate("/authentication/sign-in/basic")
-  //   }
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}

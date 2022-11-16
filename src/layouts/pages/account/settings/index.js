@@ -30,24 +30,27 @@ import BasicInfo from "layouts/pages/account/settings/components/BasicInfo";
 import ChangePassword from "layouts/pages/account/settings/components/ChangePassword";
 import { useEffect, useState } from "react";
 import httpInstance from "redux/config/axiosConfig";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import * as sagaActions from '../../../../redux/sagaActions'
 
 function Settings() {
-  // const [imageSelectedId, setImageSelectedId] = useState("")
+  const dispatch=useDispatch()
   const [imageSelectedId1, setImageSelectedId1] = useState("")
   const [userProfileData, setUserProfileData] = useState({})
-  const userId = useSelector(state => state.userData.loginUserId)
-  console.log("userId profile ", userId.data.payload._id);
+  const userId1 = useSelector(state => state.userData.loginUserId)
+  const userId = useSelector(state => state.userData.loginUserId.data.payload._id)
   useEffect(() => {
-    // setImageSelectedId(JSON.parse(localStorage.getItem("loginUserId")))
-    setImageSelectedId1(userId.data.payload._id)
+    setImageSelectedId1(userId1.data.payload._id)
   }, [])
-  // console.log("imageSelectedId profile ", imageSelectedId);
   const loadUserProfile = async () => {
     const responce = await httpInstance.get(`/users/getProfile/${imageSelectedId1}`)
     localStorage.setItem('user image', JSON.stringify(responce.data.data.image));
     setUserProfileData(responce.data.data)
   }
+
+  useEffect(() => {
+    dispatch({ type: sagaActions.LOAD_USERS_PROFILE, userId})
+}, [])
   return (
     <BaseLayout>
       <MDBox mt={4}>

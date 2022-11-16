@@ -33,7 +33,6 @@ export default function BasicModal({ open, handleClose, editId }) {
     const page = useSelector(state => state.userData.page)
     const searchTerm = useSelector(state => state.userData.searchTerm)
     const rowsPerPage = useSelector(state => state.userData.rowsPerPage)
-
     const [formValue, setFormValue] = useState({
         _id: editId,
         fname: "",
@@ -91,13 +90,11 @@ export default function BasicModal({ open, handleClose, editId }) {
     }
     const [upadetStart, setupadetStart] = useState(false)
     const updateDatapost = async () => {
+        window.location.reload(false)
         dispatch({ type: sagaActions.UPDATE_USER_START, formValue, header })
         setupadetStart(!upadetStart)
-        // dispatch({ type: sagaActions.LOAD_USERS_START, header, page, searchTerm, rowsPerPage })
+       
     }
-    useEffect(() => {
-        dispatch({ type: sagaActions.LOAD_USERS_START, header, page, searchTerm, rowsPerPage })
-    }, [upadetStart])
     const userFormSubmit = () => {
         if (fname.length <= 3) {
             setfnameErrMsg("Minimum 4 letter required*")
@@ -122,6 +119,7 @@ export default function BasicModal({ open, handleClose, editId }) {
         if (fname && lname && role && department) {
             updateDatapost()
             handleClose(false)
+            dispatch({ type: sagaActions.LOAD_USERS_START, header, page, searchTerm, rowsPerPage })
         }
     }
     return (

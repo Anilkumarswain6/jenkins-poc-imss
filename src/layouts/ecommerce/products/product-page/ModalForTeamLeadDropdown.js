@@ -8,12 +8,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
+import { useSelector,useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import MDBox from 'components/MDBox';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import MDButton from 'components/MDButton';
-import httpInstance from "../../../../redux/config/axiosConfig"
+import * as sagaActions from '../../../../redux/sagaActions'
 
 const style = {
     position: 'absolute',
@@ -28,14 +29,13 @@ const style = {
 };
 
 export default function ModalForTeamLeadDropdown({ open1, handleClose1, editId1, setOpen1 }) {
-    const [allTeamLead, setallTeamLead] = useState([])
+    const dispatch=useDispatch()
+    const token = useSelector(state => state.userData.token)
+    const allTeamLeadList = useSelector(state => state.userData.allTeamLeadList)
+    const header = { headers: { "Authorization": `Bearer ${token}` } }
     const getallTeamLead = async () => {
-        const api = `/teamLead/getList?pageno=1&pagesize=10`;
-        const token = JSON.parse(localStorage.getItem('dataKey'))
-        httpInstance.get(api, { headers: { "Authorization": `Bearer ${token}` } })
-            .then(res => {setallTeamLead(res.data); })
-            .catch(err => { console.log('error', err); })
-    }
+        dispatch({ type: sagaActions.GET_TEAM_LEAD_START, header })
+        }
     useEffect(() => {
         getallTeamLead()
     }, [])
@@ -48,9 +48,7 @@ export default function ModalForTeamLeadDropdown({ open1, handleClose1, editId1,
         setTeamLeadIdProjectSelected({ ...teamLeadIdProjectSelected, teamleadId: ev })
     }
     const teamLeadAssign = async () => {
-        const token = JSON.parse(localStorage.getItem('dataKey'))
-        const responce = await httpInstance.post('/teamLead/assignProjectToLead', teamLeadIdProjectSelected,
-            { headers: { "Authorization": `Bearer ${token}` } })
+        dispatch({ type: sagaActions.ASSIGN_TEAM_LEAD_START, teamLeadIdProjectSelected, header })
     }
     const userFormSubmit = () => {
         teamLeadAssign()
@@ -81,7 +79,7 @@ export default function ModalForTeamLeadDropdown({ open1, handleClose1, editId1,
                                 value={teamLeadValue.teamLead}
                                 onChange={handleChange13}
                             >
-                                {allTeamLead.data && allTeamLead.data.map((e, i) => (
+                                {allTeamLeadList && allTeamLeadList.map((e, i) => (
                                     <MenuItem
                                         className='select-box-product1'
                                         key={i}

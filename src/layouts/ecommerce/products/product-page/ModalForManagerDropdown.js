@@ -8,12 +8,16 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import MDBox from 'components/MDBox';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import MDButton from 'components/MDButton';
 import httpInstance from "../../../../redux/config/axiosConfig"
+import * as sagaActions from '../../../../redux/sagaActions'
+
+
 
 const style = {
     position: 'absolute',
@@ -28,13 +32,12 @@ const style = {
 };
 
 export default function ModalForManagerDropdown({ open1, handleClose1, editId1, setOpen1 }) {
-    const [allManager, setAllManager] = useState([])
+    const dispatch = useDispatch()
+    const token = useSelector(state => state.userData.token)
+    const allManagerList = useSelector(state => state.userData.allManagerList)
+    const header = { headers: { "Authorization": `Bearer ${token}` } }
     const getAllManager = async () => {
-        const api = `/managers/get-managers?pageno=1&pagesize=10`;
-        const token = JSON.parse(localStorage.getItem('dataKey'))
-        httpInstance.get(api, { headers: { "Authorization": `Bearer ${token}` } })
-            .then(res => {setAllManager(res.data.data); })
-            .catch(err => { console.log('error', err); })
+        dispatch({ type: sagaActions.GET_MANAGER_START, header })
     }
     useEffect(() => {
         getAllManager()
@@ -48,9 +51,7 @@ export default function ModalForManagerDropdown({ open1, handleClose1, editId1, 
         setMangerIdProjectSelected({ ...managerIdProjectSelected, managerId: ev })
     }
     const managerAssign = async () => {
-        const token = JSON.parse(localStorage.getItem('dataKey'))
-        const responce = await httpInstance.post('/managers/assignProject', managerIdProjectSelected,
-            { headers: { "Authorization": `Bearer ${token}` } })
+        dispatch({ type: sagaActions.ASSIGN_MANAGER_START, managerIdProjectSelected, header })
     }
     const userFormSubmit = () => {
         managerAssign()
@@ -81,7 +82,7 @@ export default function ModalForManagerDropdown({ open1, handleClose1, editId1, 
                                 value={mangerValue.manager}
                                 onChange={handleChange13}
                             >
-                                {allManager.map((e, i) => (
+                                {allManagerList.map((e, i) => (
                                     <MenuItem
                                         className='select-box-product1'
                                         key={i}

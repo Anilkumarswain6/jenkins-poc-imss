@@ -77,7 +77,6 @@ function NewUser() {
     new Promise((resolve) => {
       setTimeout(resolve, ms);
     });
-  // const handleBack = () => setActiveStep(activeStep - 1);
 
   const submitForm = async (values, actions) => {
     await sleep(1000);

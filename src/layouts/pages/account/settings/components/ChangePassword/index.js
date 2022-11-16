@@ -1,8 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable dot-notation */
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 
+import { useSelector,useDispatch } from "react-redux";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import MDBox from "components/MDBox";
@@ -11,8 +13,11 @@ import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { useEffect, useState } from "react";
 import httpInstance from "redux/config/axiosConfig";
+import * as sagaActions from '../../../../../../redux/sagaActions'
 
 function ChangePassword() {
+  const dispatch=useDispatch()
+  const userId = useSelector(state => state.userData.loginUserId)
   const [input, setInput] = useState({
     current_password: '',
     password: '',
@@ -26,7 +31,7 @@ function ChangePassword() {
   })
   const [loginId, setLoginId] = useState("")
   useEffect(() => {
-    setLoginId(JSON.parse(localStorage.getItem('loginUserId')))
+    setLoginId(userId.data.payload._id)
   }, [])
   const [input2, setInput2] = useState({
     _id: "",
@@ -84,15 +89,10 @@ function ChangePassword() {
     })
     validateInput(e);
   }
-  const [changepasswordMsg, setChangepasswordMsg] = useState("")
-  const changePasswordApi = async () => {
-    const responce = await httpInstance.put('/users/changePassword', input2)
-    setChangepasswordMsg(responce.data.message)
-  }
   const [formErr, setFormErr] = useState("")
   const updatePasswordBtn = () => {
     if (input.current_password && input.password && input.confirmPassword) {
-      changePasswordApi()
+      dispatch({ type: sagaActions.CHANGE_PASSWORD_START, input2})
       setFormErr("")
     } else {
       setFormErr("Please fill password below*")
@@ -104,7 +104,7 @@ function ChangePassword() {
         <MDTypography variant="h5">Change Password</MDTypography>
       </MDBox>
       <MDTypography className='err text-danger' sx={{ mt: -2, mb: 2, ml: 3.3, fontSize: "15px" }}>
-        {formErr}{changepasswordMsg && changepasswordMsg  }
+        {formErr}
       </MDTypography>
       <MDBox component="form" pb={3} px={3}>
         <Grid container spacing={3}>

@@ -26,32 +26,6 @@ function DataTables() {
               A lightweight, extendable, dependency-free javascript HTML table plugin.
             </MDTypography>
           </MDBox>
-          {/* <TableContainer>
-            <Table sx={{ ml: 3, mr: 3, mb: 4, width: "auto", border: "2px solid red" }} aria-label="simple table">
-              <thead>
-                <TableRow sx={{ display: "flex", justifyContent: "space-evenly" }}>
-                  <th>First Name</th>
-                  <th>Last name</th>
-                  <th>Emial</th>
-                  <th>Role</th>
-                </TableRow>
-              </thead>
-              <TableBody>
-                <tbody className="tablerow">
-                  <TableCell align="left"> row.name </TableCell>
-                  <TableCell align="left">row.calories</TableCell>
-                  <TableCell align="left">row.fat</TableCell>
-                  <TableCell align="left">row.carbs</TableCell>
-                </tbody>
-                <tbody className="tablerow">
-                  <TableCell> row.name </TableCell>
-                  <TableCell>row.calories</TableCell>
-                  <TableCell>row.fat</TableCell>
-                  <TableCell>row.carbs</TableCell>
-                </tbody>
-              </TableBody>
-            </Table>
-          </TableContainer> */}
           <TableUsers/>
         </Card>
       </MDBox>

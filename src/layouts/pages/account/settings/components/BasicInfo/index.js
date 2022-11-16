@@ -23,14 +23,10 @@ import Grid from "@mui/material/Grid";
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import { useSelector } from "react-redux";
 
-// Settings page components
-// import FormField from "layouts/pages/account/components/FormField";
-
-// Data
-// import selectData from "layouts/pages/account/settings/components/BasicInfo/data/selectData";
-
-function BasicInfo({ userProfileData }) {
+function BasicInfo() {
+  const profileData = useSelector(state => state.userData.userProfileData)
   return (
     <Card id="basic-info" sx={{ overflow: "visible" }}>
       <MDBox p={3}>
@@ -44,7 +40,7 @@ function BasicInfo({ userProfileData }) {
                 First Name
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="medium">
-                {userProfileData.fname && userProfileData.fname.charAt(0).toUpperCase() + userProfileData.fname.slice(1)}
+                {profileData.fname && profileData.fname.charAt(0).toUpperCase() + profileData.fname.slice(1)}
               </MDTypography>
             </MDBox>
           </Grid>
@@ -54,7 +50,7 @@ function BasicInfo({ userProfileData }) {
                 Last Name
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="medium">
-                {userProfileData.lname && userProfileData.lname.charAt(0).toUpperCase() + userProfileData.lname.slice(1)}
+                {profileData.lname && profileData.lname.charAt(0).toUpperCase() + profileData.lname.slice(1)}
               </MDTypography>
             </MDBox>
           </Grid>
@@ -67,7 +63,7 @@ function BasicInfo({ userProfileData }) {
                 Email
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="medium">
-                {userProfileData.email && userProfileData.email.charAt(0).toUpperCase() + userProfileData.email.slice(1)}
+                {profileData.email && profileData.email.charAt(0).toUpperCase() + profileData.email.slice(1)}
               </MDTypography>
             </MDBox>
           </Grid>
@@ -77,7 +73,7 @@ function BasicInfo({ userProfileData }) {
                 Date
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="medium">
-                {userProfileData.date && userProfileData.date.charAt(0).toUpperCase() + userProfileData.date.slice(1)}
+                {profileData.date && profileData.date.charAt(0).toUpperCase() + profileData.date.slice(1)}
               </MDTypography>
             </MDBox>
           </Grid>

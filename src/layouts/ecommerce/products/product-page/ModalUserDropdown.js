@@ -8,12 +8,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
+import { useSelector ,useDispatch} from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import MDBox from 'components/MDBox';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import MDButton from 'components/MDButton';
-import httpInstance from "../../../../redux/config/axiosConfig"
+import * as sagaActions from '../../../../redux/sagaActions'
 
 const style = {
     position: 'absolute',
@@ -28,13 +29,13 @@ const style = {
 };
 
 export default function ModalUserDropdown({ open1, handleClose1, editId1, setOpen1 }) {
-    const [allUser, setallUser] = useState([])
+    const dispatch=useDispatch()
+    const token = useSelector(state => state.userData.token)
+    const allTeamMemberList = useSelector(state => state.userData.allTeamMemberList)
+    const header = { headers: { "Authorization": `Bearer ${token}` } }
     const getallUser = async () => {
-        const api = `/teamMember/getMembers?pageno=1&pagesize=10`;
-        const token = JSON.parse(localStorage.getItem('dataKey'))
-        httpInstance.get(api, { headers: { "Authorization": `Bearer ${token}` } })
-            .then(res => {setallUser(res.data.data);})
-            .catch(err => { console.log('error', err); })
+            dispatch({ type: sagaActions.GET_TEAM_MEMBER_START, header })
+            
     }
     useEffect(() => {
         getallUser()
@@ -48,9 +49,7 @@ export default function ModalUserDropdown({ open1, handleClose1, editId1, setOpe
         setuserIdProjectSelected({ ...userIdProjectSelected, teamMemberId: ev })
     }
     const userAssign = async () => {
-        const token = JSON.parse(localStorage.getItem('dataKey'))
-        const responce = await httpInstance.post('/teamMember/AssignedProjectToteamMember', userIdProjectSelected,
-            { headers: { "Authorization": `Bearer ${token}` } })
+            dispatch({ type: sagaActions.ASSIGN_TEAM_MEMBER_START, userIdProjectSelected, header })
     }
     const userFormSubmit = () => {
         userAssign()
@@ -81,7 +80,7 @@ export default function ModalUserDropdown({ open1, handleClose1, editId1, setOpe
                                 value={userValue.teamMember}
                                 onChange={handleChange13}
                             >
-                                {allUser && allUser.map((e, i) => (
+                                {allTeamMemberList && allTeamMemberList.map((e, i) => (
                                     <MenuItem
                                         className='select-box-product1'
                                         key={i}

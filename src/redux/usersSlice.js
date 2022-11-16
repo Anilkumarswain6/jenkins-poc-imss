@@ -23,6 +23,13 @@ const listSlice = createSlice({
         statusCode: null,
         token: null,
         roleLogin: null,
+        userProfileData: [],
+        profileImageUpdated: false,
+        allManagerList:[],
+        allTeamLeadList:[],
+        allTeamMemberList:[],
+        notificationData:{},
+        logoData:[],
     },
     reducers: {
         logout: (state) => {
@@ -44,6 +51,13 @@ const listSlice = createSlice({
                 statusCode: null,
                 token: null,
                 roleLogin: null,
+                userProfileData: [],
+                profileImageUpdated: false,
+                allManagerList:[],
+                allTeamLeadList:[],
+                allTeamMemberList:[],
+                notificationData:{},
+                logoData:[],
             }
         },
         loginStart: (state) => {
@@ -70,6 +84,8 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+
         loadUserProfileStart: (state) => {
             return {
                 ...state,
@@ -79,7 +95,8 @@ const listSlice = createSlice({
         loadUserProfileSuccess: (state, action) => {
             return {
                 ...state,
-                loading: false,  
+                loading: false,
+                userProfileData: action.payload.data
             }
         },
         loadUserProfileError: (state, action) => {
@@ -89,6 +106,30 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+
+        updateUserProfileStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        updateUserProfileSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                profileImageUpdated: true
+            }
+        },
+        updateUserProfileError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
         loadUserStart: (state) => {
             return {
                 ...state,
@@ -118,6 +159,8 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+
         createUserStart: (state) => {
             return {
                 ...state,
@@ -137,6 +180,8 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+
         deleteUserStart: (state, action) => {
             return {
                 ...state,
@@ -148,7 +193,7 @@ const listSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                users: state.users.filter((item) => item.id !== action.payload)
+               
             }
         },
         deleteUserError: (state, action) => {
@@ -158,6 +203,8 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+
         updateUserStart: (state) => {
             return {
                 ...state,
@@ -177,7 +224,6 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
-
 
 
         loadProjectStart: (state) => {
@@ -225,6 +271,8 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+
         createProjectStart: (state) => {
             return {
                 ...state,
@@ -244,6 +292,8 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+
         deleteProjectStart: (state, action) => {
             return {
                 ...state,
@@ -265,6 +315,8 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+
         updateProjectStart: (state) => {
             return {
                 ...state,
@@ -274,7 +326,8 @@ const listSlice = createSlice({
         updateProjectSuccess: (state, action) => {
             return {
                 ...state,
-                loading: false,}
+                loading: false,
+            }
         },
         updateProjectError: (state, action) => {
             return {
@@ -283,10 +336,210 @@ const listSlice = createSlice({
                 error: action.payload
             }
         },
+
+        
+        changePasswordStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        changePasswordSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+            }
+        },
+        changePasswordError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+        getAllManagerStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        getAllManagerSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                allManagerList:action.payload.data
+            }
+        },
+        getAllManagerError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+        assignProjectToManagerStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        assignProjectToManagerSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+            }
+        },
+        assignProjectToManagerError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+        getAllTeamLeadStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        getAllTeamLeadSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                allTeamLeadList:action.payload.data
+            }
+        },
+        getAllTeamLeadError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+        assignProjectToTeamLeadStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        assignProjectToTeamLeadSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+            }
+        },
+        assignProjectToTeamLeadError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+
+        getAllTeamMemberStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        getAllTeamMemberSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                allTeamMemberList:action.payload.data
+            }
+        },
+        getAllTeamMemberError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+        assignProjectToTeamMemberStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        assignProjectToTeamMemberSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+            }
+        },
+        assignProjectToTeamMemberError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+        getNotificationStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        getNotificationSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                notificationData:action.payload.data
+            }
+        },
+        getNotificationError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+        logoDataStart: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        logoDataSuccess: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                logoData:action.payload.result
+            }
+        },
+        logoDataError: (state, action) => {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
+
+
     }
 });
 
-export const { logout, loadUserStart, loadUserSuccess, loadUserError,
+export const { logout,
+    loadUserStart, loadUserSuccess, loadUserError,
+    updateUserProfileStart, updateUserProfileSuccess, updateUserProfileError,
     createUserStart, createUserSuccess, createUserError,
     deleteUserStart, deleteUserSuccess, deleteUserError,
     updateUserStart, updateUserSuccess, updateUserError,
@@ -302,6 +555,25 @@ export const { logout, loadUserStart, loadUserSuccess, loadUserError,
     createProjectStart, createProjectSuccess, createProjectError,
     deleteProjectStart, deleteProjectSuccess, deleteProjectError,
     updateProjectStart, updateProjectSuccess, updateProjectError,
+
+
+    changePasswordStart, changePasswordSuccess, changePasswordError,
+
+
+    getAllManagerStart, getAllManagerSuccess, getAllManagerError,
+    assignProjectToManagerStart, assignProjectToManagerSuccess, assignProjectToManagerError,
+
+
+    getAllTeamLeadStart, getAllTeamLeadSuccess, getAllTeamLeadError,
+    assignProjectToTeamLeadStart, assignProjectToTeamLeadSuccess, assignProjectToTeamLeadError,
+
+
+    getAllTeamMemberStart, getAllTeamMemberSuccess, getAllTeamMemberError,
+    assignProjectToTeamMemberStart, assignProjectToTeamMemberSuccess, assignProjectToTeamMemberError,
+
+    getNotificationStart, getNotificationSuccess, getNotificationError,
+
+    logoDataStart, logoDataSuccess, logoDataError,
 
 } = listSlice.actions;
 

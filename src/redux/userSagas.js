@@ -3,17 +3,40 @@
 /* eslint-disable prettier/prettier */
 import { take, takeEvery, takeLatest, put, all, delay, fork, call } from "redux-saga/effects"
 import {
+    assignProjectToManagerError,
+    assignProjectToManagerSuccess,
+    assignProjectToTeamLeadError,
+    assignProjectToTeamLeadSuccess,
+    assignProjectToTeamMemberError,
+    assignProjectToTeamMemberSuccess,
+    changePasswordError,
+    changePasswordSuccess,
     createProjectError, createProjectSuccess, createUserError, createUserSuccess,
     deleteProjectError, deleteProjectSuccess, deleteUserError, deleteUserSuccess,
+    getAllManagerError,
+    getAllManagerSuccess,
+    getAllTeamLeadError,
+    getAllTeamLeadSuccess,
+    getAllTeamMemberError,
+    getAllTeamMemberSuccess,
+    getNotificationError,
+    getNotificationSuccess,
     loadProjectError, loadProjectSuccess, loadProjectSuccessForAll, loadProjectSuccesspagination,
     loadProjectSuccesspaginationForAll, loadUserError,
     loadUserProfileError, loadUserProfileSuccess, loadUserSuccess, loadUserSuccesspagination,
-    loginError, loginStartSuccess, updateProjectError, updateProjectSuccess, updateUserError,
+    loginError, loginStartSuccess, logoDataError, logoDataSuccess, updateProjectError, updateProjectSuccess, updateUserError,
+    updateUserProfileError,
+    updateUserProfileSuccess,
     updateUserSuccess
 } from "./usersSlice"
 import {
-    createProjectApi, createUsersApi, deleteProjectApi, deleteUsersApi, loadProjectApi,
-    loadProjectApiForAll, loadUserProfileApi, loadUsersApi, loginApi, updateProjectApi,
+    assignMangertoProjectApi,
+    assigTeamLeadtoProjectApi,
+    assigTeamMembertoProjectApi,
+    changePasswordApi,
+    createProjectApi, createUsersApi, deleteProjectApi, deleteUsersApi, getLogoApi, getNotificationApi, loadManagerListApi, loadProjectApi,
+    loadProjectApiForAll, loadTeamLeadListApi, loadTeamMemberListApi, loadUserProfileApi, loadUsersApi, loginApi, updateProjectApi,
+    updateUserProfileApi,
     updateUsersApi
 } from "./api"
 import * as sagaActions from './sagaActions'
@@ -27,6 +50,16 @@ function* onLoginStartAsync(page) {
         yield put(loginError(error.responce.data))
     }
 }
+
+function* onUpdateProfilePictureAsync(profile) {
+    try {
+        const responce = yield call(updateUserProfileApi, profile.profile)
+        yield delay(500)
+        yield put(updateUserProfileSuccess(responce.data))
+    } catch (error) {
+        yield put(updateUserProfileError(error.responce.data))
+    }
+}
 function* onLoadProfilePictureAsync(page) {
     try {
         const responce = yield call(loadUserProfileApi, page)
@@ -36,6 +69,17 @@ function* onLoadProfilePictureAsync(page) {
         yield put(loadUserProfileError(error.responce.data))
     }
 }
+function* onChangePasswordAsync(input) {
+    try {
+        const responce = yield call(changePasswordApi, input)
+        yield delay(500)
+        yield put(changePasswordSuccess(responce.data))
+    } catch (error) {
+        yield put(changePasswordError(error.responce.data))
+    }
+}
+
+
 function* onLoadUsersStartAsync(header) {
     try {
         const responce = yield call(loadUsersApi, header)
@@ -55,13 +99,13 @@ function* onCreateUsersStartAsync({ type, formValue, header }) {
         yield put(createUserError(error.responce.data))
     }
 }
-function* onDeleteUsersStartAsync({ deletedIdSelect, header }) {
+function* onDeleteUsersStartAsync({ type, deleteId, header }) {
     try {
         // eslint-disable-next-line no-unused-vars
-        const responce = yield call(deleteUsersApi, deletedIdSelect.data, header)
-        yield put(deleteUserSuccess(deletedIdSelect.data._id))
+        const responce = yield call(deleteUsersApi,deleteId, header)
+        yield put(deleteUserSuccess(responce))
     } catch (error) {
-        yield put(deleteUserError(error.responce.data))
+        yield put(deleteUserError(error.responce))
     }
 }
 function* onUpdateUsersStartAsync({ type, formValue, header }) {
@@ -96,20 +140,20 @@ function* onLoadProjectStartAsyncForAll(header) {
         yield put(loadProjectError(error.responce.data))
     }
 }
-function* onCreateProjectStartAsync({ type, formValue, header }) {
+function* onCreateProjectStartAsync({ type, projectDetails, header }) {
     try {
-        const responce = yield call(createProjectApi, formValue, header)
+        const responce = yield call(createProjectApi, projectDetails, header)
         yield delay(1000)
         yield put(createProjectSuccess(responce.data))
     } catch (error) {
         yield put(createProjectError(error.responce.data))
     }
 }
-function* onDeleteProjectStartAsync({ deletedIdSelect, header }) {
+function* onDeleteProjectStartAsync({ type, deleteId, header }) {
     try {
         // eslint-disable-next-line no-unused-vars
-        const responce = yield call(deleteProjectApi, deletedIdSelect.data, header)
-        yield put(deleteProjectSuccess(deletedIdSelect.data._id))
+        const responce = yield call(deleteProjectApi,deleteId, header)
+        yield put(deleteProjectSuccess(responce))
     } catch (error) {
         yield put(deleteProjectError(error.responce.data))
     }
@@ -125,12 +169,104 @@ function* onUpdateProjectStartAsync({ type, projectDetails, header }) {
 }
 
 
+function* onLoadManagerListAsync(header) {
+    try {
+        const responce = yield call(loadManagerListApi, header.header)
+        yield delay(500)
+        yield put(getAllManagerSuccess(responce.data))
+    } catch (error) {
+        yield put(getAllManagerError(error.responce.data))
+    }
+}
+function* onAssignProjectToMangerAsync({ type, managerIdProjectSelected, header }) {
+    try {
+        const responce = yield call(assignMangertoProjectApi,managerIdProjectSelected, header)
+        yield delay(500)
+        yield put(assignProjectToManagerSuccess(responce.data))
+    } catch (error) {
+        yield put(assignProjectToManagerError(error.responce.data))
+    }
+}
+
+
+function* onLoadTeamLeadListAsync(header) {
+    try {
+        const responce = yield call(loadTeamLeadListApi, header.header)
+        yield delay(500)
+        yield put(getAllTeamLeadSuccess(responce.data))
+    } catch (error) {
+        yield put(getAllTeamLeadError(error.responce.data))
+    }
+}
+function* onAssignProjectToTeamLeadAsync({ type, teamLeadIdProjectSelected, header }) {
+    try {
+        const responce = yield call(assigTeamLeadtoProjectApi,teamLeadIdProjectSelected, header)
+        yield delay(500)
+        yield put(assignProjectToTeamLeadSuccess(responce.data))
+    } catch (error) {
+        yield put(assignProjectToTeamLeadError(error.responce.data))
+    }
+}
+
+function* onLoadTeamMemberListAsync(header) {
+    try {
+        const responce = yield call(loadTeamMemberListApi, header.header)
+        yield delay(500)
+        yield put(getAllTeamMemberSuccess(responce.data))
+        } catch (error) {
+        yield put(getAllTeamMemberError(error.responce.data))
+    }
+}
+function* onAssignProjectToTeamMemberAsync({ type, userIdProjectSelected, header }) {
+    try {
+        const responce = yield call(assigTeamMembertoProjectApi,userIdProjectSelected, header)
+        yield delay(500)
+        yield put(assignProjectToTeamMemberSuccess(responce.data))
+    } catch (error) {
+        yield put(assignProjectToTeamMemberError(error.responce.data))
+    }
+}
+
+function* ongetNotificationAsync(header) {
+    try {
+        const responce = yield call(getNotificationApi, header)
+        yield delay(500)
+        yield put(getNotificationSuccess(responce.data))
+    } catch (error) {
+        yield put(getNotificationError(error.responce.data))
+    }
+}
+
+function* ongetLogoAsync() {
+    try {
+        const responce = yield call(getLogoApi)
+        yield delay(500)
+        yield put(logoDataSuccess(responce.data))
+    } catch (error) {
+        yield put(logoDataError(error.responce.data))
+    }
+}
+
+
+
+
 function* onLogin() {
     yield takeEvery(sagaActions.LOGIN_START, onLoginStartAsync)
 }
+
+
 function* onLoadProfile() {
     yield takeEvery(sagaActions.LOAD_USERS_PROFILE, onLoadProfilePictureAsync)
 }
+function* onUpdateProfile() {
+    yield takeEvery(sagaActions.UPDATE_USERS_PROFILE, onUpdateProfilePictureAsync)
+}
+function* onChangePassword() {
+    yield takeEvery(sagaActions.CHANGE_PASSWORD_START, onChangePasswordAsync)
+}
+
+
+
 function* onLoadUsers() {
     yield takeEvery(sagaActions.LOAD_USERS_START, onLoadUsersStartAsync)
 }
@@ -138,10 +274,7 @@ function* onCreateUsers() {
     yield takeLatest(sagaActions.CREATE_USER_START, onCreateUsersStartAsync)
 }
 function* onDeleteUser() {
-    while (true) {
-        const payload = yield take(sagaActions.DELETE_USER_START)
-        yield call(onDeleteUsersStartAsync, payload)
-    }
+    yield takeEvery(sagaActions.DELETE_USER_START, onDeleteUsersStartAsync)
 }
 function* onUpdateUsers() {
     yield takeEvery(sagaActions.UPDATE_USER_START, onUpdateUsersStartAsync)
@@ -158,21 +291,57 @@ function* onCreateProject() {
     yield takeLatest(sagaActions.CREATE_PROJECT_START, onCreateProjectStartAsync)
 }
 function* onDeleteProject() {
-    while (true) {
-        const payload = yield take(sagaActions.DELETE_PROJECT_START)
-        yield call(onDeleteProjectStartAsync, payload)
-    }
+    yield takeEvery(sagaActions.DELETE_PROJECT_START, onDeleteProjectStartAsync)
 }
 function* onUpdateProject() {
     yield takeEvery(sagaActions.UPDATE_PROJECT_START, onUpdateProjectStartAsync)
 }
 
 
+function* onLoadMangerList() {
+    yield takeEvery(sagaActions.GET_MANAGER_START, onLoadManagerListAsync)
+}
+function* onAssignProjectToManger() {
+    yield takeEvery(sagaActions.ASSIGN_MANAGER_START, onAssignProjectToMangerAsync)
+}
 
-const usersSagas = [fork(onLoadUsers), fork(onCreateUsers), fork(onDeleteUser), fork(onUpdateUsers)
-    , fork(onLogin), fork(onLoadProfile),
-fork(onLoadProject), fork(onCreateProject), fork(onDeleteProject), fork(onUpdateProject),
-fork(onLoadProjectForAll)
+
+function* onLoadTeamLeadList() {
+    yield takeEvery(sagaActions.GET_TEAM_LEAD_START, onLoadTeamLeadListAsync)
+}
+function* onAssignProjectToTeamLead() {
+    yield takeEvery(sagaActions.ASSIGN_TEAM_LEAD_START, onAssignProjectToTeamLeadAsync)
+}
+
+function* onLoadTeamMemberList() {
+    yield takeEvery(sagaActions.GET_TEAM_MEMBER_START, onLoadTeamMemberListAsync)
+}
+function* onAssignProjectToTeamMember() {
+    yield takeEvery(sagaActions.ASSIGN_TEAM_MEMBER_START, onAssignProjectToTeamMemberAsync)
+}
+function* ongetNotification() {
+    yield takeEvery(sagaActions.GET_NOTIFICATION_START, ongetNotificationAsync)
+}
+function* ongetLogo() {
+    yield takeEvery(sagaActions.GET_LOGO_START, ongetLogoAsync)
+}
+
+
+const usersSagas = [
+    fork(onLoadUsers), fork(onCreateUsers), fork(onDeleteUser), fork(onUpdateUsers),
+    fork(onLogin),
+    fork(onChangePassword),
+    fork(onLoadProfile), fork(onUpdateProfile),
+    fork(onLoadProject), fork(onCreateProject), fork(onDeleteProject), fork(onUpdateProject),
+    fork(onLoadProjectForAll),
+    fork(onLoadMangerList),
+    fork(onAssignProjectToManger),
+    fork(onLoadTeamLeadList),
+    fork(onAssignProjectToTeamLead),
+    fork(onLoadTeamMemberList),
+    fork(onAssignProjectToTeamMember),
+    fork(ongetNotification),
+    fork(ongetLogo),
 ]
 export default function* rootSaga() {
     yield all([...usersSagas])

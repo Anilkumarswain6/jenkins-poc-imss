@@ -16,18 +16,23 @@ import createCache from "@emotion/cache";
 import routes from "routes";
 import managerRoutes from "managerRoutes";
 import userRoutes from "userRoutes";
-import { useMaterialUIController, setMiniSidenav } from "context"; 
-// animationPlayState: 
+import { useMaterialUIController, setMiniSidenav } from "context";
 // import brandWhite from "assets/images/logo-ct.png";
 // import brandDark from "assets/images/logo-ct-dark.png";
 import product from "assets/images/product-12.jpg";
 import favicon from "assets/images/favicon.png";
 import "./messaging_init_in_sw";
 import httpInstance from "redux/config/axiosConfig";
+import { useSelector } from "react-redux";
 // import { Provider } from "react-redux";
 // import store from "redux/store";
 
 export default function App() {
+  const profileImageUpdated = useSelector(state => state.userData.profileImageUpdated)
+  useEffect(() => {
+    // window.location.reload(false)
+  }, [profileImageUpdated===true])
+
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,

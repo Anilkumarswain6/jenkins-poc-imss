@@ -25,6 +25,8 @@ import * as sagaActions from '../../../../redux/sagaActions'
 function Cover() {
   const dispatch = useDispatch()
   const token = useSelector(state => state.userData.token)
+  const loginData = useSelector(state => state.userData.loginData)
+
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
@@ -50,13 +52,6 @@ const [loadProfile, setloadProfile] = useState(false)
   const loginResponceBtn = async () => {
     dispatch({ type: sagaActions.LOGIN_START, formValue })
     setloadProfile(!loadProfile)
-    // const responce = await httpInstance.post('/users/login', formValue)
-    // setRoleState(responce.data.data.payload.role)
-    // setTokenState(responce.data.data.token)
-    // setLoginResponce(responce.status)
-    // localStorage.setItem('loginUserId', JSON.stringify(responce.data.data.payload._id));
-    // localStorage.setItem('user fname', JSON.stringify(responce.data.data.payload.fname));
-    // const fname = JSON.parse(localStorage.getItem("user fname"));
   }
   const reduxState = useSelector(state => state.userData)
  const [loginSuccess, setloginSuccess] = useState(false)
@@ -93,8 +88,6 @@ const [loadProfile, setloadProfile] = useState(false)
   const _id = reduxState.loginData._id
   const loadUserProfile = async () => {
     dispatch({ type: sagaActions.LOAD_USERS_PROFILE,_id })
-    // const responce = await httpInstance.get(`/users/getProfile/${imageSelectedId}`)
-    // localStorage.setItem('user image', JSON.stringify(responce.data.data.image));
 
   }
 

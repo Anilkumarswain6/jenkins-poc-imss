@@ -77,9 +77,6 @@ function UserInfo({ formData }) {
   }
 
   const formDatapost = async () => {
-    // const token = JSON.parse(localStorage.getItem('dataKey'))
-    // const responce = await httpInstance.post('/users/addUsers', formValue,
-    //   { headers: { "Authorization": `Bearer ${token}` } })
     dispatch({ type: sagaActions.CREATE_USER_START, formValue,header })
   }
   const userFormSubmit = () => {

@@ -57,22 +57,12 @@ const TableUsers = () => {
     };
 
     const deleteUsersApi = async () => {
-        const deletedIdSelect = { data: { "_id": deleteId } }
-        // const responce = await httpInstance.delete('/users/removeUser', {
-        //     headers: { "Authorization": `Bearer ${token}` },
-        //     data: { "_id": deleteId }
-        // })
-        dispatch({ type: sagaActions.DELETE_USER_START, deletedIdSelect ,header})
-        // // dispatch({ type: sagaActions.LOAD_USERS_START, header })
+        dispatch({ type: sagaActions.DELETE_USER_START, deleteId, header })
         dispatch({ type: sagaActions.LOAD_USERS_START, header, page, searchTerm, rowsPerPage })
     }
     useEffect(() => { if (deleteId) { deleteUsersApi() } }, [deleteId])
 
 
-
-    // useEffect(() => {
-    //     dispatch({ type: sagaActions.LOAD_USERS_START, header, page, searchTerm, rowsPerPage })
-    // }, [])
     useEffect(() => {
         dispatch({ type: sagaActions.LOAD_USERS_START, header, page, searchTerm, rowsPerPage })
     }, [page, searchTerm, rowsPerPage])

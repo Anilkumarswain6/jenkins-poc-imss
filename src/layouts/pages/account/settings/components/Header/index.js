@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
@@ -31,6 +33,8 @@ import CreateIcon from '@mui/icons-material/Create';
 import { useEffect, useState } from "react";
 import httpInstance from "redux/config/axiosConfig";
 import httpInstanceImg from "redux/config/axiosConfigImg";
+import { useSelector,useDispatch } from "react-redux";
+import * as sagaActions from '../../../../../../redux/sagaActions'  
 
 const style = {
   position: 'absolute',
@@ -43,25 +47,25 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-function Header({ userProfileData, imageSelectedId, loadUserProfile }) {
+function Header() {
+  const profileData = useSelector(state => state.userData.userProfileData)
+  const userId = useSelector(state => state.userData.loginUserId.data.payload._id)
+  const dispatch=useDispatch()
   const imageChange = (e) => {
     window.location.reload(false)
     const file = e.target.files[0];
     const profile = new FormData();
     profile.append("profile", file);
-    profile.append("id", imageSelectedId);
-    httpInstance.post('/users/uploadProfileImg', profile)
-      }
-  useEffect(() => {
-    loadUserProfile()
-  }, [imageSelectedId])
+    profile.append("id", userId);
+   dispatch({ type: sagaActions.UPDATE_USERS_PROFILE, profile})
+     }
   return (
     <Card id="profile">
       <MDBox p={2}>
         <Grid container spacing={3} alignItems="center">
           <Grid item>
             <div className="container">
-              <MDAvatar src={`${httpInstanceImg}${userProfileData.image}`} alt="profile-image" className="image" size="xl" shadow="sm" />
+              <MDAvatar src={`${httpInstanceImg}${profileData.image}`} alt="profile-image" className="image" size="xl" shadow="sm" />
               <div className="middle">
                 <div className="text">
                   <Tooltip title="Add" placement="top">
@@ -79,12 +83,12 @@ function Header({ userProfileData, imageSelectedId, loadUserProfile }) {
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
               <MDTypography variant="h5" fontWeight="medium">
-                {userProfileData.fname && userProfileData.fname.charAt(0).toUpperCase() + userProfileData.fname.slice(1)}
+                {profileData.fname && profileData.fname.charAt(0).toUpperCase() + profileData.fname.slice(1)}
                 {" "}
-                {userProfileData.lname && userProfileData.lname.charAt(0).toUpperCase() + userProfileData.lname.slice(1)}
+                {profileData.lname && profileData.lname.charAt(0).toUpperCase() + profileData.lname.slice(1)}
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="medium">
-                {userProfileData.email && userProfileData.email.charAt(0).toUpperCase() + userProfileData.email.slice(1)}
+                {profileData.email && profileData.email.charAt(0).toUpperCase() + profileData.email.slice(1)}
               </MDTypography>
             </MDBox>
           </Grid>

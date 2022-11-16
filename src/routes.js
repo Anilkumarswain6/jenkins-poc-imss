@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
+// import { useSelector } from "react-redux";
 import Analytics from "layouts/dashboards/analytics";
 import NewUser from "layouts/pages/users/new-user";
 import Settings from "layouts/pages/account/settings";
@@ -18,6 +19,7 @@ import httpInstanceImg from "./redux/config/axiosConfigImg"
 const id = JSON.parse(localStorage.getItem("user image"));
 const fname = JSON.parse(localStorage.getItem("user fname"));
 const str = fname.charAt(0).toUpperCase() + fname.slice(1);
+// const profileData = useSelector(state => state.userData.userProfileData)
 const routes = [
   {
     type: "collapse",

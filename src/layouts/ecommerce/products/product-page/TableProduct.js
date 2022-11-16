@@ -57,32 +57,7 @@ const TableProduct = () => {
         setRowsPerPage(e.target.value)
         setPage(1)
     }
-    // const roleOnLogin = JSON.parse(localStorage.getItem("role"));
-
     const [loadingUserApi, setLoadingUserApi] = useState(false)
-    const loadUsersApi = async () => {
-        //     setLoadingUserApi(true)
-        //     const api = `/projects/get-projects?pageno=${page}&pagesize=${rowsPerPage}&regex=${searchTerm}`;
-        //     const token = JSON.parse(localStorage.getItem('dataKey'))
-        //     httpInstance.get(api, { headers: { "Authorization": `Bearer ${token}` } })
-        //         .then(res => {setUserTableData(res.data.data)})
-        //         .catch(err => { console.log('error', err); })
-    }
-
-
-    // const [loadAssignedProjectData, setLoadAssignedProjectData] = useState([])
-    // const loadUsersApiForAll = async () => {
-    //     const userId = JSON.parse(localStorage.getItem('loginUserId'))
-    //     const api = `/managers/getMyProjectList/${userId}?pageno=${page}&pagesize=${rowsPerPage}&regex=${searchTerm}`;
-    //     // /managers/getMyProjectList/634653ed28839b2064b2692d?pageno=1&pagesize=10
-    //     httpInstance.get(api)
-    //         .then(res => { setLoadAssignedProjectData(res.data.result) })
-    //         .catch(err => { console.log('error', err); })
-    // }
-
-
-
-
     const assignedProjects = []
     for (let key in loadAssignedProjectData) {
         const assignedProjects1 = []
@@ -106,33 +81,25 @@ const TableProduct = () => {
         }
     };
 
-    const deleteUsersApi = async () => {
-        const deletedIdSelect = { data: { "_id": deleteId } }
-        // const token = JSON.parse(localStorage.getItem('dataKey'))
-        // const responce = await httpInstance.delete('/projects/delete-project', {
-        //     headers: { "Authorization": `Bearer ${token}` },
-        //     data: { "_id": deleteId }
-        // })
-        dispatch({ type: sagaActions.DELETE_USER_START, deletedIdSelect, header })
-        // // dispatch({ type: sagaActions.LOAD_USERS_START, header })
-        dispatch({ type: sagaActions.LOAD_USERS_START, header, page, searchTerm, rowsPerPage })
-        // loadUsersApi()
+    const deleteProjectApi = async () => {
+        dispatch({ type: sagaActions.DELETE_PROJECT_START, deleteId, header })
+        dispatch({ type: sagaActions.LOAD_PROJECT_START, header, page, searchTerm, rowsPerPage })
     }
-    useEffect(() => { if (deleteId) { deleteUsersApi() } }, [deleteId])
+    useEffect(() => { if (deleteId) { deleteProjectApi() } }, [deleteId])
+
+    useEffect(() => {
+        dispatch({ type: sagaActions.LOAD_PROJECT_START, header, page, searchTerm, rowsPerPage })
+    }, [page, searchTerm, rowsPerPage])
+
 
     useEffect(() => {
         if (roleOnLogin == 1) {
-            // loadUsersApi()
             setLoadingUserApi(true)
             dispatch({ type: sagaActions.LOAD_PROJECT_START, header, page, searchTerm, rowsPerPage })
         } else {
-            // loadUsersApiForAll()
             dispatch({ type: sagaActions.LOAD_PROJECT_START_FOR_ALL, header, page, searchTerm, rowsPerPage, reduxState })
         }
     }, [page, searchTerm, rowsPerPage])
-    // useEffect(() => {
-    //     dispatch({ type: sagaActions.LOAD_PROJECT_START, header, page, searchTerm, rowsPerPage })
-    // }, [page, searchTerm, rowsPerPage])
 
 
 
@@ -353,7 +320,7 @@ const TableProduct = () => {
             {showModal1 && roleOnLogin == 1 ? <ModalForManagerDropdown open1={open1} setOpen1={setOpen1} editId1={editId1} handleOpen1={handleOpen1} handleClose1={handleClose1} /> : null}
             {showModal1 && roleOnLogin == 2 ? <ModalForTeamLeadDropdown open1={open1} setOpen1={setOpen1} editId1={editId1} handleOpen1={handleOpen1} handleClose1={handleClose1} /> : null}
             {showModal1 && roleOnLogin == 3 ? <ModalUserDropdown open1={open1} setOpen1={setOpen1} editId1={editId1} handleOpen1={handleOpen1} handleClose1={handleClose1} /> : null}
-            {showModal && <EditModal loadUsersApi={loadUsersApi}editedId={editedId} setOpen={setOpen} open={open} editId={editId} handleOpen={handleOpen} handleClose={handleClose} />}
+            {showModal && <EditModal editedId={editedId} setOpen={setOpen} open={open} editId={editId} handleOpen={handleOpen} handleClose={handleClose} />}
         </div >
         // </DashboardLayout>
     )

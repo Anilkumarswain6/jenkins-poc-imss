@@ -69,9 +69,10 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
-import axios from "axios";
+
 import { Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import * as sagaActions from '../../redux/sagaActions'
 // import { Typography } from "@mui/material";
 
 // eslint-disable-next-line react/prop-types
@@ -523,12 +524,10 @@ function Sidenav({ color, brand, brandName, managerRoutes, userRoutes, routes, .
     );
   }
 
-  const [userList, setUserList] = useState([]);
-
+  const dispatchh=useDispatch()
+  const logoData = useSelector(state => state.userData.logoData)
   useEffect(() => {
-    axios.get('http://localhost:4000/logo/getLogo').then(res => {
-      setUserList(res.data.result);
-    });
+    dispatchh({ type: sagaActions.GET_LOGO_START })
   }, []);
 
   return (
@@ -564,11 +563,11 @@ function Sidenav({ color, brand, brandName, managerRoutes, userRoutes, routes, .
         </MDBox>
       </MDBox>
       <MDBox component={NavLink} to="/dashboards/analytics" display="flex" alignItems="center" sx={{ justifyContent: "space-evenly" }}>
-          {userList.map((item) => {
+          {logoData.map((item) => {
          return <MDBox component="img" src={`http://localhost:4000/${item.projectLogo}`} width="65px" height="55px" borderRadius='20px' alt="no img" />
         })}
         <MDTypography component="h6" variant="button" fontSize="medium" fontWeight="medium" color={textColor}>
-        {userList.map((item) => {
+        {logoData.map((item) => {
           // eslint-disable-next-line array-callback-return, consistent-return
           return <Typography sx={{ml:-4}} key={item}>{item.projectTitle}</Typography>
         })}
